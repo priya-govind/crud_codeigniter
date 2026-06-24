@@ -1,3 +1,4 @@
+
 # CodeIgniter 4 Application Starter
 
 ## What is CodeIgniter?
@@ -126,3 +127,5 @@ This generates:
 
 Code
 public/css/output.css
+=======
+# crud_codeigniter
