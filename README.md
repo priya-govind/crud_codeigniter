@@ -66,4 +66,63 @@ Additionally, make sure that the following extensions are enabled in your PHP:
 
 - json (enabled by default - don't turn it off)
 - [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library 
+
+
+
+Tailwind Installation:
+1. Install Dependencies
+Run in your project root:
+
+powershell
+npm install -D tailwindcss postcss autoprefixer
+2. Initialize Config Files
+powershell
+npx tailwindcss init -p
+This creates:
+
+tailwind.config.js
+
+postcss.config.js
+
+3. Configure Tailwind
+Edit tailwind.config.js so Tailwind scans your views:
+
+js
+module.exports = {
+  content: [
+    "./app/Views/**/*.php",
+    "./public/**/*.js"
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+4. Create Entry CSS
+Make a file:
+
+Code
+public/css/app.css
+Add:
+
+css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+5. Add Build Script
+In package.json:
+
+json
+"scripts": {
+  "build": "tailwindcss -i ./public/css/app.css -o ./public/css/output.css --watch"
+}
+6. Compile Tailwind
+Run:
+
+powershell
+npm run build
+This generates:
+
+Code
+public/css/output.css
