@@ -5,7 +5,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-<div class="max-w-5xl mx-auto mt-10 bg-white shadow-lg rounded-lg p-6">
+<div class="w-full min-h-screen bg-gray-50 p-6">
     <h2 class="text-2xl font-bold mb-6">User List</h2>
 
     <table id="usersTable" class="min-w-full border-collapse border border-gray-300">
