@@ -1,0 +1,73 @@
+ body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7f6;
+    padding: 20px;
+}
+.table-container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+th, td {
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    text-align: left;
+}
+th {
+    background-color: #f8f9fa;
+    color: #333;
+}
+input[type="text"], input[type="number"] {
+    width: 90%;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+input[readonly] {
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    color: #495057;
+    cursor: not-allowed;
+}
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+.dropdown-options {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
+    z-index: 1;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    width: 92%;
+    border-radius: 4px;
+}
+.dropdown-options div {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+.dropdown-options div:hover {
+    background-color: #f1f1f1;
+}
+.btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-right: 5px;
+}
+.btn-clone { background-color: #28a745; color: white; }
+.btn-delete { background-color: #dc3545; color: white; }
+.btn:hover { opacity: 0.9; }
