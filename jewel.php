@@ -137,19 +137,43 @@ async function groupAndSaveRows() {
     const rowsToGroup = [];
     const payloadPackage = []; 
 
+    let groupSumCards = 0;
+    let groupSumSize = 0;
+    let groupSumPieces = 0;
+    let groupSumWeight = 0;
+    let groupSumMelting = 0;
+    let groupSumTouch = 0;
+    let groupSumPure=0;
+
     checkboxes.forEach(cb => {
         const row = cb.closest('tr');
         rowsToGroup.push(row);
 
+        const t_cards = parseFloat(row.querySelector('.t-cards-input').value) || 0;
+        const size = parseFloat(row.querySelector('.size-input').value) || 0;
+        const piece = parseFloat(row.querySelector('.piece-input').value) || 0;
+        const weight = parseFloat(row.querySelector('.weight-input').value) || 0;
+        const melting = parseFloat(row.querySelector('.melting-input').value) || 0;
+        const touch = parseFloat(row.querySelector('.touch-input').value) || 0;
+        const pure = parseFloat(row.querySelector('.pure-input').value) || 0;
+
+        groupSumCards += t_cards;
+        groupSumSize += size;
+        groupSumPieces += piece;
+        groupSumWeight += weight;
+        groupSumMelting += melting;
+        groupSumTouch += touch;
+        groupSumPure +=pure
+
         payloadPackage.push({
             product_id: cb.value,
             product_name: row.querySelector('.product-name-input').value,
-            t_cards: row.querySelector('.t-cards-input').value,
-            size: row.querySelector('.size-input').value,
-            piece: row.querySelector('.piece-input').value,
-            weight: row.querySelector('.weight-input').value,
-            melting: row.querySelector('.melting-input').value,
-            touch: row.querySelector('.touch-input').value,
+            t_cards: t_cards,
+            size: size,
+            piece: piece,
+            weight: weight,
+            melting: melting,
+            touch: touch,
             pure: row.querySelector('.pure-input').value,
             rate: row.querySelector('.rate-input').value,
             group_id: uniqueGroupId 
@@ -193,8 +217,27 @@ async function groupAndSaveRows() {
             if (groupField) groupField.value = uniqueGroupId;
         });
 
+        let totalInputHTML = '';
+        if (colIndex === 2) { 
+            totalInputHTML = `\n<input type="text" class="t-cards-input total-sum-field" value="${groupSumCards}" readonly="">`;
+        }  else if (colIndex === 4) { 
+            totalInputHTML = `\n<input type="number" class="piece-input total-sum-field" value="${groupSumPieces}" readonly="">`;
+        } else if (colIndex === 5) { 
+            totalInputHTML = `\n<input type="number" class="weight-input total-sum-field" value="${groupSumWeight.toFixed(2)}" readonly="">`;
+        } else if (colIndex === 6) { 
+            totalInputHTML = `\n<input type="number" class="melting-input total-sum-field" value="${groupSumMelting}" disabled="true" style="background-color: transparent;" readonly="">`;
+        } else if (colIndex === 7) { 
+            totalInputHTML = `\n<input type="number" class="touch-input total-sum-field" value="${groupSumTouch}" disabled="true" style="background-color: transparent;" readonly="">`;
+        }else if (colIndex === 8) { 
+            totalInputHTML = `\n<input type="number" class="pure-input total-sum-field" value="${groupSumPure}" readonly="">`;
+        }
+
         baseRow.cells[colIndex].innerHTML = '';
         baseRow.cells[colIndex].appendChild(cellContainer);
+        
+        if (totalInputHTML) {
+            cellContainer.insertAdjacentHTML('beforeend', totalInputHTML);
+        }
     }
 
     rowsToGroup.forEach((row, i) => {
@@ -211,8 +254,7 @@ async function groupAndSaveRows() {
     if (mainCheckbox) mainCheckbox.style.display = 'none';
     if (actionsWrapper) actionsWrapper.style.display = 'flex';
 
-
-      const actionsCell = baseRow.cells[10]; // Targets index 11 (the Actions TD)
+    const actionsCell = baseRow.cells[10]; 
     if (actionsCell) {
         actionsCell.style.display = 'none';
     }
@@ -224,13 +266,11 @@ async function groupAndSaveRows() {
 function calculateRow(input) {
     const container = input.closest('.grouped-cell-container, tr');
     
-    // Scans within the local group row snippet wrapper context cleanly
     let sizeField = container.querySelector('.size-input') || input.closest('tr').querySelector('.size-input');
     let pieceField = container.querySelector('.piece-input') || input.closest('tr').querySelector('.piece-input');
     let meltingField = container.querySelector('.melting-input') || input.closest('tr').querySelector('.melting-input');
     let touchField = container.querySelector('.touch-input') || input.closest('tr').querySelector('.touch-input');
 
-    // Target inputs inside stacked clusters require matching index processing logic arrays
     if (input.closest('.grouped-cell-container')) {
         const parentCell = input.closest('td');
         const cellContainer = input.closest('.grouped-cell-container');
@@ -252,7 +292,6 @@ function calculateRow(input) {
         row.querySelectorAll('.pure-input')[processingIndex].value = (melting + touch).toFixed(2);
         row.querySelectorAll('.rate-input')[processingIndex].value = (melting + touch).toFixed(2);
     } else {
-        // Standard standalone rows
         const size = parseFloat(sizeField.value) || 0;
         const piece = parseFloat(pieceField.value) || 0;
         const melting = parseFloat(meltingField.value) || 0;
@@ -284,7 +323,7 @@ function cloneRow(button) {
 
     clone.querySelectorAll('input').forEach(input => {
         if(input.type === 'checkbox') input.checked = false;
-        else if(!input.hasAttribute('readonly')) input.value = '';
+        //else if(!input.hasAttribute('readonly')) input.value = '';
     });
 
     clone.querySelectorAll('input[readonly]').forEach(i => i.value = '');
@@ -417,7 +456,6 @@ async function saveGroupEdits(button) {
     
     const payloadPackage = [];
     
-    // Gather all fields nested inside this specific row container
     const productNames = row.querySelectorAll('.product-name-input');
     const tCards = row.querySelectorAll('.t-cards-input');
     const sizes = row.querySelectorAll('.size-input');
@@ -428,7 +466,6 @@ async function saveGroupEdits(button) {
     const pures = row.querySelectorAll('.pure-input');
     const rates = row.querySelectorAll('.rate-input');
 
-    // Reconstruct payload using parallel matrix array structure matching each line element inside the group
     for (let i = 0; i < productNames.length; i++) {
         payloadPackage.push({
             group_id: groupId,
@@ -444,7 +481,6 @@ async function saveGroupEdits(button) {
         });
     }
 
-    // Submit payload update package straight to CodeIgniter 4 update endpoint routing
     try {
         const response = await fetch('<?= base_url("group/update") ?>', {
             method: 'POST',
@@ -466,13 +502,11 @@ async function saveGroupEdits(button) {
         return;
     }
 
-    // Relock inputs back to default view state safely
     row.querySelectorAll('.grouped-cell-container input:not([readonly])').forEach(input => {
         input.setAttribute('disabled', 'true');
         input.style.backgroundColor = 'transparent';
     });
 
-    // Revert button icons control states
     button.style.display = 'none';
     wrapper.querySelector('.btn-edit-group').style.display = 'inline-block';
     
@@ -483,13 +517,11 @@ function enableGroupEditing(button) {
     const row = button.closest('tr');
     const wrapper = button.parentElement;
     
-    // Unlock all text and numeric inputs inside the grouped cell containers
     row.querySelectorAll('.grouped-cell-container input:not([readonly])').forEach(input => {
         input.removeAttribute('disabled');
-        input.style.backgroundColor = '#fff'; // Bright color to highlight fields are editable
+        input.style.backgroundColor = '#fff'; 
     });
 
-    // Toggle button layout visibility state controls
     button.style.display = 'none'; 
     wrapper.querySelector('.btn-save-group').style.display = 'inline-block';
 }
